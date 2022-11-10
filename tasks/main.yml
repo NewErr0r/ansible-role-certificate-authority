@@ -1,0 +1,39 @@
+---
+- name: Easy-RSA | Installation easy-rsa
+  apt:
+    name: easy-rsa
+    state: latest
+    update_cache: true
+
+- name: Easy-RSA | easy-rsa init-pki
+  command: 
+    cmd: "./easyrsa init-pki"
+    chdir: "{{ easyrsa_dir }}"
+    creates: "{{ easyrsa_dir }}/pki"
+    
+- name: Easy-RSA | Create vars file 
+  copy: 
+    dest: "{{ easyrsa_dir }}/vars"
+    content: | 
+      set_var EASYRSA_REQ_COUNTRY    "{{ EASYRSA_REQ_COUNTRY }}"
+      set_var EASYRSA_REQ_PROVINCE   "{{ EASYRSA_REQ_PROVINCE }}"
+      set_var EASYRSA_REQ_CITY       "{{ EASYRSA_REQ_CITY }}"
+      set_var EASYRSA_REQ_ORG        "{{ EASYRSA_REQ_ORG }}"
+      set_var EASYRSA_REQ_EMAIL      "{{ EASYRSA_REQ_EMAIL }}"
+      set_var EASYRSA_REQ_OU         "{{ EASYRSA_REQ_OU }}"
+      set_var EASYRSA_ALGO           "{{ EASYRSA_ALGO }}"
+      set_var EASYRSA_DIGEST         "{{ EASYRSA_DIGEST }}"
+
+- name: Easy-RSA | easy-rsa build-ca
+  command: 
+    cmd: "./easyrsa build-ca nopass"
+    chdir: "{{ easyrsa_dir }}"
+    creates: "{{ easyrsa_dir }}/pki/ca.crt"
+  environment:
+    EASYRSA_BATCH: "yes"
+
+- name: Pick up the root certificate from the server
+  ansible.builtin.fetch:
+    src: "{{ easyrsa_dir }}/pki/ca.crt"
+    dest: "{{ path_save_ca_crt }}"
+    flat: yes
