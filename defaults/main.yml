@@ -1,0 +1,16 @@
+---
+easyrsa_dir: "/usr/share/easy-rsa"
+
+# vars file
+EASYRSA_REQ_COUNTRY: "RU"
+EASYRSA_REQ_PROVINCE: "Moscow"
+EASYRSA_REQ_CITY: "Moscow"
+EASYRSA_REQ_ORG: "DEMO"
+EASYRSA_REQ_EMAIL: "admin@example.com"
+EASYRSA_REQ_OU: "Community"
+EASYRSA_ALGO: "ec"
+EASYRSA_DIGEST: "sha512"
+
+# local path for save ca.crt
+path_save_ca_crt: "./"
+
